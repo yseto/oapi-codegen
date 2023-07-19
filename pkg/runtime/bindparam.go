@@ -513,6 +513,11 @@ func indirect(dest interface{}) (interface{}, reflect.Value, reflect.Type) {
 	}
 	v = reflect.Indirect(v)
 	t := v.Type()
+
+	if _, ok := dest.(encoding.TextUnmarshaler); ok {
+		return dest, reflect.Value{}, nil
+	}
+
 	// special handling for custom types which might look like an object. We
 	// don't want to use object binding on them, but rather treat them as
 	// primitive types. time.Time{} is a unique case since we can't add a Binder
